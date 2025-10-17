@@ -1,4 +1,7 @@
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useDispatch } from '../../services/store';
+import { fetchUser } from '../../services/slices/userSlice';
 import {
   ConstructorPage,
   Feed,
@@ -21,9 +24,14 @@ import '../../index.css';
 import styles from './app.module.css';
 
 const App = () => {
+  const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const background = location.state && location.state.background;
+
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
 
   const handleModalClose = () => {
     navigate(-1);
