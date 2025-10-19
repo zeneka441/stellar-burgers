@@ -2,6 +2,7 @@ import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch } from '../../services/store';
 import { fetchUser } from '../../services/slices/userSlice';
+import { fetchIngredients } from '../../services/slices/ingredientsSlice';
 import {
   ConstructorPage,
   Feed,
@@ -31,6 +32,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(fetchUser());
+    dispatch(fetchIngredients());
   }, [dispatch]);
 
   const handleModalClose = () => {

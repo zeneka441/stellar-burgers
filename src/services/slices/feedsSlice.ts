@@ -2,17 +2,10 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getFeedsApi } from '@api';
 import { TOrdersData } from '@utils-types';
 
-export const fetchFeeds = createAsyncThunk<TOrdersData>(
-  'feeds/fetchFeeds',
-  async (_, { rejectWithValue }) => {
-    try {
-      const data = await getFeedsApi();
-      return data;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  }
-);
+export const fetchFeeds = createAsyncThunk('feeds/fetchFeeds', async () => {
+  const data = await getFeedsApi();
+  return data;
+});
 
 interface FeedsState {
   orders: TOrdersData | null;

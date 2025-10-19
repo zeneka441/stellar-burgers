@@ -49,11 +49,14 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
 
   if (!orderInfo) return null;
 
+  const isProfilePage = location.pathname === '/profile/orders';
+
   return (
     <OrderCardUI
       orderInfo={orderInfo}
       maxIngredients={maxIngredients}
       locationState={{ background: location }}
+      showStatus={isProfilePage}
     />
   );
 });
