@@ -12,13 +12,20 @@ const initialState: TOrderDetailsState = {
   loading: false
 };
 
-export const fetchOrderByNumber = createAsyncThunk(
-  'orderDetails/fetchOrderByNumber',
-  async (number: number) => {
+export const fetchOrderByNumber = createAsyncThunk<
+  TOrder,
+  number,
+  { rejectValue: string }
+>('orderDetails/fetchOrderByNumber', async (number, { rejectWithValue }) => {
+  try {
     const response = await getOrderByNumberApi(number);
     return response.orders[0];
+  } catch (error) {
+    return rejectWithValue(
+      error instanceof Error ? error.message : 'Ошибка загрузки заказа'
+    );
   }
-);
+});
 
 const orderDetailsSlice = createSlice({
   name: 'orderDetails',

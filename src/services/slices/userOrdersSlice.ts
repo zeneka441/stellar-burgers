@@ -12,13 +12,20 @@ const initialState: TUserOrdersState = {
   loading: false
 };
 
-export const fetchUserOrders = createAsyncThunk(
-  'userOrders/fetchUserOrders',
-  async () => {
+export const fetchUserOrders = createAsyncThunk<
+  TOrder[],
+  void,
+  { rejectValue: string }
+>('userOrders/fetchUserOrders', async (_, { rejectWithValue }) => {
+  try {
     const response = await getOrdersApi();
     return response;
+  } catch (error) {
+    return rejectWithValue(
+      error instanceof Error ? error.message : 'Ошибка загрузки заказов'
+    );
   }
-);
+});
 
 const userOrdersSlice = createSlice({
   name: 'userOrders',
