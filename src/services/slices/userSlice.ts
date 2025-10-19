@@ -22,8 +22,10 @@ export const register = createAsyncThunk<
       return response.user;
     }
     return rejectWithValue('Ошибка регистрации');
-  } catch (error: any) {
-    return rejectWithValue(error?.message || 'Ошибка регистрации');
+  } catch (error) {
+    return rejectWithValue(
+      error instanceof Error ? error.message : 'Ошибка регистрации'
+    );
   }
 });
 
@@ -40,8 +42,10 @@ export const login = createAsyncThunk<
       return response.user;
     }
     return rejectWithValue('Ошибка авторизации');
-  } catch (error: any) {
-    return rejectWithValue(error?.message || 'Ошибка авторизации');
+  } catch (error) {
+    return rejectWithValue(
+      error instanceof Error ? error.message : 'Ошибка авторизации'
+    );
   }
 });
 
@@ -52,8 +56,10 @@ export const fetchUser = createAsyncThunk<TUser, void, { rejectValue: string }>(
       const response = await getUserApi();
       if ('user' in response) return response.user;
       return rejectWithValue('Ошибка получения пользователя');
-    } catch (error: any) {
-      return rejectWithValue(error?.message || 'Ошибка получения пользователя');
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Ошибка получения пользователя'
+      );
     }
   }
 );
@@ -65,8 +71,10 @@ export const logout = createAsyncThunk<void, void, { rejectValue: string }>(
       await logoutApi();
       deleteCookie('accessToken');
       localStorage.removeItem('refreshToken');
-    } catch (error: any) {
-      return rejectWithValue(error?.message || 'Ошибка выхода');
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Ошибка выхода'
+      );
     }
   }
 );
@@ -80,8 +88,10 @@ export const updateUser = createAsyncThunk<
     const response = await updateUserApi(userData);
     if ('user' in response) return response.user;
     return rejectWithValue('Ошибка обновления данных');
-  } catch (error: any) {
-    return rejectWithValue(error?.message || 'Ошибка обновления данных');
+  } catch (error) {
+    return rejectWithValue(
+      error instanceof Error ? error.message : 'Ошибка обновления данных'
+    );
   }
 });
 
