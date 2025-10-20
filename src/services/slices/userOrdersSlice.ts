@@ -5,11 +5,13 @@ import { TOrder } from '@utils-types';
 type TUserOrdersState = {
   orders: TOrder[];
   loading: boolean;
+  error: string | null;
 };
 
 const initialState: TUserOrdersState = {
   orders: [],
-  loading: false
+  loading: false,
+  error: null
 };
 
 export const fetchUserOrders = createAsyncThunk<
@@ -35,13 +37,15 @@ const userOrdersSlice = createSlice({
     builder
       .addCase(fetchUserOrders.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchUserOrders.fulfilled, (state, action) => {
         state.loading = false;
         state.orders = action.payload;
       })
-      .addCase(fetchUserOrders.rejected, (state) => {
+      .addCase(fetchUserOrders.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.error.message || 'Ошибка загрузки заказов';
       });
   }
 });
