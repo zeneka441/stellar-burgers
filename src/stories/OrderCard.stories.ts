@@ -65,7 +65,7 @@ export const DefaultOrderCard: Story = {
       total: 2,
       date: new Date('2024-01-25'),
       _id: '32',
-      status: 'ready',
+      status: 'done',
       name: 'Начинка',
       createdAt: '',
       updatedAt: '',
@@ -81,6 +81,7 @@ export const DefaultOrderCard: Story = {
         search: '',
         state: null
       }
-    }
+    },
+    showStatus: true
   }
 };

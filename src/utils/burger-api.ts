@@ -83,7 +83,12 @@ export const getFeedsApi = () =>
   fetch(`${URL}/orders/all`)
     .then((res) => checkResponse<TFeedsResponse>(res))
     .then((data) => {
-      if (data?.success) return data;
+      if (data?.success)
+        return {
+          orders: data.orders,
+          total: data.total,
+          totalToday: data.totalToday
+        };
       return Promise.reject(data);
     });
 

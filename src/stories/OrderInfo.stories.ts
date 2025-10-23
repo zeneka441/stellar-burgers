@@ -37,7 +37,7 @@ export const DefaultOrderInfo: Story = {
       date: new Date('2024-01-25'),
       total: 134,
       _id: '233',
-      status: 'ready',
+      status: 'done',
       name: 'Order',
       createdAt: '',
       updatedAt: '',
