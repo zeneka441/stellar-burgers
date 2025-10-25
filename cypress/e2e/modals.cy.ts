@@ -1,7 +1,15 @@
+import {
+  INGREDIENT_IDS,
+  INGREDIENT_NAMES,
+  SELECTORS,
+  TEXTS,
+  API_ENDPOINTS
+} from '../constants';
+
 describe('Модальные окна', () => {
   beforeEach(() => {
     cy.fixture('data').then((data) => {
-      cy.intercept('GET', 'api/ingredients', {
+      cy.intercept('GET', API_ENDPOINTS.INGREDIENTS, {
         statusCode: 200,
         body: { success: true, data: data.ingredients }
       }).as('getIngredients');
@@ -14,81 +22,84 @@ describe('Модальные окна', () => {
 
   describe('Модальное окно деталей ингредиента', () => {
     it('должно открыть модальное окно при клике на ингредиент', () => {
-      cy.get('[data-cy=ingredient-643d69a5c3f7b9001cfa093c]').click();
+      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.CRATER_BUN)).click();
 
-      cy.get('[data-cy=modal]').should('be.visible');
+      cy.get(SELECTORS.MODAL).should('be.visible');
 
-      cy.get('[data-cy=modal-title]').should('contain', 'Детали ингредиента');
+      cy.get(SELECTORS.MODAL_TITLE).should('contain', TEXTS.INGREDIENT_DETAILS);
 
-      cy.get('[data-cy=ingredient-name]').should(
+      cy.get(SELECTORS.INGREDIENT_NAME).should(
         'contain',
-        'Краторная булка N-200i'
+        INGREDIENT_NAMES.CRATER_BUN
       );
 
       // Проверяем, что отображается ингредиент
-      cy.get('[data-cy=ingredient-image]')
+      cy.get(SELECTORS.INGREDIENT_IMAGE)
         .should('be.visible')
         .and('have.attr', 'src')
         .and('include', 'bun-02-large.png');
 
       // Проверяем пищевую ценность
-      cy.get('[data-cy=ingredient-calories]').should('contain', '420');
-      cy.get('[data-cy=ingredient-proteins]').should('contain', '80');
-      cy.get('[data-cy=ingredient-fat]').should('contain', '24');
-      cy.get('[data-cy=ingredient-carbohydrates]').should('contain', '53');
+      cy.get(SELECTORS.INGREDIENT_CALORIES).should('contain', '420');
+      cy.get(SELECTORS.INGREDIENT_PROTEINS).should('contain', '80');
+      cy.get(SELECTORS.INGREDIENT_FAT).should('contain', '24');
+      cy.get(SELECTORS.INGREDIENT_CARBOHYDRATES).should('contain', '53');
     });
 
     it('должно закрыть модальное окно при клике на крестик', () => {
-      cy.get('[data-cy=ingredient-643d69a5c3f7b9001cfa093c]').click();
+      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.CRATER_BUN)).click();
 
-      cy.get('[data-cy=modal]').should('be.visible');
+      cy.get(SELECTORS.MODAL).should('be.visible');
 
-      cy.get('[data-cy=modal-close]').click();
+      cy.get(SELECTORS.MODAL_CLOSE).click();
 
-      cy.get('[data-cy=modal]').should('not.exist');
+      cy.get(SELECTORS.MODAL).should('not.exist');
     });
 
     it('должно закрыть модальное окно при клике на оверлей', () => {
-      cy.get('[data-cy=ingredient-643d69a5c3f7b9001cfa093c]').click();
+      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.CRATER_BUN)).click();
 
-      cy.get('[data-cy=modal]').should('be.visible');
+      cy.get(SELECTORS.MODAL).should('be.visible');
 
-      cy.get('[data-cy=modal-overlay]').click({ force: true });
+      cy.get(SELECTORS.MODAL_OVERLAY).click({ force: true });
 
-      cy.get('[data-cy=modal]').should('not.exist');
+      cy.get(SELECTORS.MODAL).should('not.exist');
     });
 
     it('должно закрыть модальное окно при нажатии Escape', () => {
-      cy.get('[data-cy=ingredient-643d69a5c3f7b9001cfa093c]').click();
+      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.CRATER_BUN)).click();
 
-      cy.get('[data-cy=modal]').should('be.visible');
+      cy.get(SELECTORS.MODAL).should('be.visible');
 
       cy.get('body').type('{esc}');
 
-      cy.get('[data-cy=modal]').should('not.exist');
+      cy.get(SELECTORS.MODAL).should('not.exist');
     });
 
     it('должно отображать корректные данные для разных типов ингредиентов', () => {
       // Булочка
-      cy.get('[data-cy=ingredient-643d69a5c3f7b9001cfa093c]').click();
-      cy.get('[data-cy=ingredient-name]').should(
+      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.CRATER_BUN)).click();
+      cy.get(SELECTORS.INGREDIENT_NAME).should(
         'contain',
-        'Краторная булка N-200i'
+        INGREDIENT_NAMES.CRATER_BUN
       );
-      cy.get('[data-cy=modal-close]').click();
+      cy.get(SELECTORS.MODAL_CLOSE).click();
 
       // Начинка
-      cy.get('[data-cy=ingredient-643d69a5c3f7b9001cfa0941]').click();
-      cy.get('[data-cy=ingredient-name]').should(
+      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.BIO_CUTLET)).click();
+      cy.get(SELECTORS.INGREDIENT_NAME).should(
         'contain',
-        'Биокотлета из марсианской Магнолии'
+        INGREDIENT_NAMES.BIO_CUTLET
       );
-      cy.get('[data-cy=modal-close]').click();
+      cy.get(SELECTORS.MODAL_CLOSE).click();
 
       // Соус
-      cy.get('[data-cy=ingredient-643d69a5c3f7b9001cfa0942]').click();
-      cy.get('[data-cy=ingredient-name]').should('contain', 'Соус Spicy-X');
-      cy.get('[data-cy=modal-close]').click();
+      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.SPICY_SAUCE)).click();
+      cy.get(SELECTORS.INGREDIENT_NAME).should(
+        'contain',
+        INGREDIENT_NAMES.SPICY_SAUCE
+      );
+      cy.get(SELECTORS.MODAL_CLOSE).click();
     });
   });
 });
