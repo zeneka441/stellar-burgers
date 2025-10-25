@@ -10,6 +10,7 @@ import {
 describe('Создание заказа', () => {
   beforeEach(() => {
     cy.fixture('data').then((data) => {
+      cy.clearCookies();
       cy.clearLocalStorage();
 
       cy.intercept('GET', API_ENDPOINTS.INGREDIENTS, {
@@ -33,8 +34,8 @@ describe('Создание заказа', () => {
       }).as('createOrder');
     });
 
+    cy.setCookie('accessToken', 'Bearer test-access-token');
     cy.window().then((win) => {
-      win.localStorage.setItem('accessToken', 'Bearer test-access-token');
       win.localStorage.setItem('refreshToken', 'test-refresh-token');
     });
 
@@ -166,6 +167,7 @@ describe('Создание заказа', () => {
 
   it('не должен позволить создать заказ неавторизованному пользователю', () => {
     // Очищаем токены авторизации
+    cy.clearCookies();
     cy.clearLocalStorage();
 
     // Перехватываем запрос проверки пользователя и возвращаем ошибку 401
@@ -173,6 +175,8 @@ describe('Создание заказа', () => {
       statusCode: 401,
       body: { success: false, message: 'not authorized' }
     }).as('getUserUnauthorized');
+
+    cy.visit('/');
 
     // Добавляем булку
     cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.CRATER_BUN))

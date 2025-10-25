@@ -13,6 +13,11 @@ describe('Модальные окна', () => {
         statusCode: 200,
         body: { success: true, data: data.ingredients }
       }).as('getIngredients');
+
+      cy.intercept('GET', API_ENDPOINTS.AUTH_USER, {
+        statusCode: 401,
+        body: { success: false, message: 'not authorized' }
+      }).as('getUser');
     });
 
     cy.visit('/');
@@ -22,7 +27,7 @@ describe('Модальные окна', () => {
 
   describe('Модальное окно деталей ингредиента', () => {
     it('должно открыть модальное окно при клике на ингредиент', () => {
-      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.CRATER_BUN)).click();
+      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.CRATER_BUN)).find('a').click();
 
       cy.get(SELECTORS.MODAL).should('be.visible');
 
@@ -47,7 +52,7 @@ describe('Модальные окна', () => {
     });
 
     it('должно закрыть модальное окно при клике на крестик', () => {
-      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.CRATER_BUN)).click();
+      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.CRATER_BUN)).find('a').click();
 
       cy.get(SELECTORS.MODAL).should('be.visible');
 
@@ -57,7 +62,7 @@ describe('Модальные окна', () => {
     });
 
     it('должно закрыть модальное окно при клике на оверлей', () => {
-      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.CRATER_BUN)).click();
+      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.CRATER_BUN)).find('a').click();
 
       cy.get(SELECTORS.MODAL).should('be.visible');
 
@@ -67,7 +72,7 @@ describe('Модальные окна', () => {
     });
 
     it('должно закрыть модальное окно при нажатии Escape', () => {
-      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.CRATER_BUN)).click();
+      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.CRATER_BUN)).find('a').click();
 
       cy.get(SELECTORS.MODAL).should('be.visible');
 
@@ -78,7 +83,7 @@ describe('Модальные окна', () => {
 
     it('должно отображать корректные данные для разных типов ингредиентов', () => {
       // Булочка
-      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.CRATER_BUN)).click();
+      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.CRATER_BUN)).find('a').click();
       cy.get(SELECTORS.INGREDIENT_NAME).should(
         'contain',
         INGREDIENT_NAMES.CRATER_BUN
@@ -86,7 +91,7 @@ describe('Модальные окна', () => {
       cy.get(SELECTORS.MODAL_CLOSE).click();
 
       // Начинка
-      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.BIO_CUTLET)).click();
+      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.BIO_CUTLET)).find('a').click();
       cy.get(SELECTORS.INGREDIENT_NAME).should(
         'contain',
         INGREDIENT_NAMES.BIO_CUTLET
@@ -94,7 +99,9 @@ describe('Модальные окна', () => {
       cy.get(SELECTORS.MODAL_CLOSE).click();
 
       // Соус
-      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.SPICY_SAUCE)).click();
+      cy.get(SELECTORS.INGREDIENT(INGREDIENT_IDS.SPICY_SAUCE))
+        .find('a')
+        .click();
       cy.get(SELECTORS.INGREDIENT_NAME).should(
         'contain',
         INGREDIENT_NAMES.SPICY_SAUCE
